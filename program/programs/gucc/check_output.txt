@@ -1,0 +1,155 @@
+    Checking gucc v0.1.0 (/Users/hiroyusai/src/velo/program/programs/gucc)
+error: init_if_needed requires that anchor-lang be imported with the init-if-needed cargo feature enabled. Carefully read the init_if_needed docs before using this feature to make sure you know how to protect yourself against re-initialization attacks.
+  --> programs/gucc/src/lib.rs:92:9
+   |
+92 |         init_if_needed,
+   |         ^^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `crate`
+ --> programs/gucc/src/lib.rs:5:1
+  |
+5 | #[program]
+  | ^^^^^^^^^^ could not find `__client_accounts_mint_tokens` in the crate root
+  |
+  = note: this error originates in the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused imports: `Mint`, `TokenAccount`, and `Token`
+ --> programs/gucc/src/lib.rs:8:35
+  |
+8 |     use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
+  |                                   ^^^^  ^^^^^  ^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0277]: the trait bound `MintTokens<'_>: Bumps` is not satisfied
+  --> programs/gucc/src/lib.rs:31:29
+   |
+31 |     pub fn mint_tokens(ctx: Context<MintTokens>, amount: u64) -> Result<()> {
+   |                             ^^^^^^^^^^^^^^^^^^^ the trait `Bumps` is not implemented for `MintTokens<'_>`
+   |
+   = help: the following other types implement trait `Bumps`:
+             CreateNonceAccount<'info>
+             CreateNonceAccountWithSeed<'info>
+             DefaultAccountStateInitialize<'info>
+             DefaultAccountStateUpdate<'info>
+             GroupMemberPointerInitialize<'info>
+             GroupMemberPointerUpdate<'info>
+             GroupPointerInitialize<'info>
+             GroupPointerUpdate<'info>
+           and 80 others
+note: required by a bound in `anchor_lang::context::Context`
+  --> /Users/hiroyusai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anchor-lang-0.32.1/src/context.rs:24:42
+   |
+24 | pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
+   |                                          ^^^^^ required by this bound in `Context`
+
+error[E0277]: the trait bound `MintTokens<'_>: Bumps` is not satisfied
+  --> programs/gucc/src/lib.rs:31:37
+   |
+31 |     pub fn mint_tokens(ctx: Context<MintTokens>, amount: u64) -> Result<()> {
+   |                                     ^^^^^^^^^^ the trait `Bumps` is not implemented for `MintTokens<'_>`
+   |
+   = help: the following other types implement trait `Bumps`:
+             CreateNonceAccount<'info>
+             CreateNonceAccountWithSeed<'info>
+             DefaultAccountStateInitialize<'info>
+             DefaultAccountStateUpdate<'info>
+             GroupMemberPointerInitialize<'info>
+             GroupMemberPointerUpdate<'info>
+             GroupPointerInitialize<'info>
+             GroupPointerUpdate<'info>
+           and 80 others
+
+error[E0277]: the trait bound `MintTokens<'_>: Bumps` is not satisfied
+ --> programs/gucc/src/lib.rs:5:1
+  |
+5 | #[program]
+  | ^^^^^^^^^^ the trait `Bumps` is not implemented for `MintTokens<'_>`
+  |
+  = help: the following other types implement trait `Bumps`:
+            CreateNonceAccount<'info>
+            CreateNonceAccountWithSeed<'info>
+            DefaultAccountStateInitialize<'info>
+            DefaultAccountStateUpdate<'info>
+            GroupMemberPointerInitialize<'info>
+            GroupMemberPointerUpdate<'info>
+            GroupPointerInitialize<'info>
+            GroupPointerUpdate<'info>
+          and 80 others
+  = note: this error originates in the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: no function or associated item named `try_accounts` found for struct `MintTokens` in the current scope
+   --> programs/gucc/src/lib.rs:5:1
+    |
+5   | #[program]
+    | ^^^^^^^^^^ function or associated item not found in `MintTokens<'_>`
+...
+87  | pub struct MintTokens<'info> {
+    | ---------------------------- function or associated item `try_accounts` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following trait defines an item `try_accounts`, perhaps you need to implement it:
+            candidate #1: `anchor_lang::Accounts`
+help: there is a method `try_into` with a similar name, but with different arguments
+   --> /Users/hiroyusai/.rustup/toolchains/1.89.0-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/convert/mod.rs:617:5
+    |
+617 |     fn try_into(self) -> Result<T, Self::Error>;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: this error originates in the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `MintTokens<'_>: anchor_lang::Accounts<'_, _>` is not satisfied
+  --> programs/gucc/src/lib.rs:5:1
+   |
+5  | #[program]
+   | ^^^^^^^^^^ the trait `anchor_lang::Accounts<'_, _>` is not implemented for `MintTokens<'_>`
+   |
+   = help: the following other types implement trait `anchor_lang::Accounts<'info, B>`:
+             `AccountLoader<'info, T>` implements `anchor_lang::Accounts<'info, B>`
+             `Box<T>` implements `anchor_lang::Accounts<'info, B>`
+             `CreateNonceAccount<'info>` implements `anchor_lang::Accounts<'info, CreateNonceAccountBumps>`
+             `CreateNonceAccountWithSeed<'info>` implements `anchor_lang::Accounts<'info, CreateNonceAccountWithSeedBumps>`
+             `DefaultAccountStateInitialize<'info>` implements `anchor_lang::Accounts<'info, DefaultAccountStateInitializeBumps>`
+             `DefaultAccountStateUpdate<'info>` implements `anchor_lang::Accounts<'info, DefaultAccountStateUpdateBumps>`
+             `GroupMemberPointerInitialize<'info>` implements `anchor_lang::Accounts<'info, GroupMemberPointerInitializeBumps>`
+             `GroupMemberPointerUpdate<'info>` implements `anchor_lang::Accounts<'info, GroupMemberPointerUpdateBumps>`
+           and 93 others
+note: required by a bound in `anchor_lang::context::Context::<'a, 'b, 'c, 'info, T>::new`
+  --> /Users/hiroyusai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anchor-lang-0.32.1/src/context.rs:55:16
+   |
+55 |     T: Bumps + Accounts<'info, T::Bumps>,
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `Context::<'a, 'b, 'c, 'info, T>::new`
+56 | {
+57 |     pub fn new(
+   |            --- required by a bound in this associated function
+   = note: this error originates in the attribute macro `program` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `MintTokens<'_>: Bumps` is not satisfied in `anchor_lang::context::Context<'_, '_, '_, '_, MintTokens<'_>>`
+  --> programs/gucc/src/lib.rs:31:29
+   |
+31 |     pub fn mint_tokens(ctx: Context<MintTokens>, amount: u64) -> Result<()> {
+   |                             ^^^^^^^^^^^^^^^^^^^ within `anchor_lang::context::Context<'_, '_, '_, '_, MintTokens<'_>>`, the trait `Bumps` is not implemented for `MintTokens<'_>`
+   |
+   = help: the following other types implement trait `Bumps`:
+             CreateNonceAccount<'info>
+             CreateNonceAccountWithSeed<'info>
+             DefaultAccountStateInitialize<'info>
+             DefaultAccountStateUpdate<'info>
+             GroupMemberPointerInitialize<'info>
+             GroupMemberPointerUpdate<'info>
+             GroupPointerInitialize<'info>
+             GroupPointerUpdate<'info>
+           and 80 others
+note: required because it appears within the type `anchor_lang::context::Context<'_, '_, '_, '_, MintTokens<'_>>`
+  --> /Users/hiroyusai/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anchor-lang-0.32.1/src/context.rs:24:12
+   |
+24 | pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
+   |            ^^^^^^^
+help: function arguments must have a statically known size, borrowed types always have a known size
+   |
+31 |     pub fn mint_tokens(ctx: &Context<MintTokens>, amount: u64) -> Result<()> {
+   |                             +
+
+Some errors have detailed explanations: E0277, E0432, E0599.
+For more information about an error, try `rustc --explain E0277`.
+warning: `gucc` (lib) generated 1 warning
+error: could not compile `gucc` (lib) due to 8 previous errors; 1 warning emitted
