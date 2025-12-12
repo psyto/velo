@@ -14,10 +14,14 @@ export default function MarketDashboard({ event }: { event: Event | null }) {
     const [amount, setAmount] = useState(10);
     const [loading, setLoading] = useState(false);
     const [onChainData, setOnChainData] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!event || !wallet) return;
+        if (!event) return;
         const fetchDetails = async () => {
+            setError(null);
+            setOnChainData(null);
+            // Use Read-Only mode if wallet not connected
             const program = getProgram(connection, wallet);
             try {
                 // @ts-ignore
@@ -25,6 +29,7 @@ export default function MarketDashboard({ event }: { event: Event | null }) {
                 setOnChainData(data);
             } catch (e) {
                 console.error(e);
+                setError("Account not found (Demo Only)");
             }
         };
         fetchDetails();
@@ -89,7 +94,9 @@ export default function MarketDashboard({ event }: { event: Event | null }) {
                 </div>
                 {onChainData?.resolved ?
                     <span className="px-2 py-1 bg-red-900 text-red-200 text-xs rounded">Resolved</span> :
-                    <span className="px-2 py-1 bg-green-900 text-green-200 text-xs rounded">Active</span>
+                    onChainData ?
+                        <span className="px-2 py-1 bg-green-900 text-green-200 text-xs rounded">Active</span> :
+                        <span className="px-2 py-1 bg-gray-700 text-gray-200 text-xs rounded">View Only</span>
                 }
             </div>
 
@@ -137,6 +144,11 @@ export default function MarketDashboard({ event }: { event: Event | null }) {
                 {!wallet && (
                     <div className="text-center p-2 bg-yellow-900/20 text-yellow-500 text-sm rounded">
                         Please connect wallet to trade
+                    </div>
+                )}
+                {error && (
+                    <div className="text-center p-2 bg-red-900/20 text-red-500 text-sm rounded">
+                        {error}
                     </div>
                 )}
             </div>

@@ -18,6 +18,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.32.1"
+    "@coral-xyz/anchor": "^0.32.1",
+    "@solana/spl-token": "^0.4.14"
   }
 }

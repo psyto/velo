@@ -1,7 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+const WalletMultiButton = dynamic(
+  async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
+  { ssr: false }
+);
+
 import MarketDashboard from '@/components/MarketDashboard';
 import { Event } from '@/components/MapInner';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -19,33 +24,32 @@ export default function Home() {
   useEffect(() => {
     // Start with some mock events for visualization immediately
     const mockEvents: Event[] = [
-      { id: 'SHIBUYA-DEMO', lat: 35.6591, lng: 139.7006, description: 'Pedestrian Crossing Congestion > 85%', settlementTime: Math.floor(Date.now() / 1000) + 7200, publicKey: '111111' },
-      { id: 'SHINJUKU-EXIT', lat: 35.6905, lng: 139.6995, description: 'Taxi Wait Time > 15 mins', settlementTime: Math.floor(Date.now() / 1000) + 3600, publicKey: '222222' },
-      { id: 'GINZA-CROSS', lat: 35.671989, lng: 139.763997, description: 'Traffic Speed < 10km/h', settlementTime: Math.floor(Date.now() / 1000) + 5000, publicKey: '333333' }
+      { id: 'SHIBUYA-DEMO', lat: 35.6591, lng: 139.7006, description: 'Pedestrian Crossing Congestion > 85%', settlementTime: Math.floor(Date.now() / 1000) + 7200, publicKey: '11111111111111111111111111111111' },
+      { id: 'SHINJUKU-EXIT', lat: 35.6905, lng: 139.6995, description: 'Taxi Wait Time > 15 mins', settlementTime: Math.floor(Date.now() / 1000) + 3600, publicKey: '11111111111111111111111111111112' },
+      { id: 'GINZA-CROSS', lat: 35.671989, lng: 139.763997, description: 'Traffic Speed < 10km/h', settlementTime: Math.floor(Date.now() / 1000) + 5000, publicKey: '11111111111111111111111111111113' }
     ];
     setEvents(mockEvents);
 
-    if (wallet) {
-      const fetchEvents = async () => {
-        try {
-          const program = getProgram(connection, wallet);
-          // @ts-ignore
-          const evs = await program.account.congestionEvent.all();
-          const mapped = evs.map((e: any) => ({
-            id: e.account.eventId,
-            // Mock coordinates derived from index for demo (spread them out)
-            lat: 35.65 + (Math.random() * 0.1),
-            lng: 139.65 + (Math.random() * 0.1),
-            description: e.account.description,
-            settlementTime: e.account.settlementTime.toNumber(),
-            publicKey: e.publicKey.toBase58()
-          }));
-          // Merge real events, replacing mock if ID matches (unlikely) or just appending
-          setEvents(prev => [...prev.filter(p => !p.publicKey.startsWith('111')), ...mapped]);
-        } catch (e) { console.error("Failed to fetch on-chain events", e); }
-      };
-      fetchEvents();
-    }
+    const fetchEvents = async () => {
+      try {
+        // Read-Only Fetch (wallet can be null)
+        const program = getProgram(connection, wallet);
+        // @ts-ignore
+        const evs = await program.account.congestionEvent.all();
+        const mapped = evs.map((e: any) => ({
+          id: e.account.eventId,
+          // Mock coordinates derived from index for demo (spread them out)
+          lat: 35.65 + (Math.random() * 0.1),
+          lng: 139.65 + (Math.random() * 0.1),
+          description: e.account.description,
+          settlementTime: e.account.settlementTime.toNumber(),
+          publicKey: e.publicKey.toBase58()
+        }));
+        // Merge real events with static mock events
+        setEvents([...mockEvents, ...mapped]);
+      } catch (e) { console.error("Failed to fetch on-chain events", e); }
+    };
+    fetchEvents();
   }, [wallet, connection]);
 
   return (
