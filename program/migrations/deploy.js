@@ -1,12 +1,18 @@
-// Migrations are an early feature. Currently, they're nothing more than this
-// single deploy script that's invoked from the CLI, injecting a provider
-// configured from the workspace's Anchor.toml.
+// Migration script for the GUCC congestion event prediction market.
+//
+// Usage:
+//   anchor migrate
+//
+// This script is intentionally minimal — GUCC events are created dynamically
+// via `initialize_event`, so there is no global state to pre-initialize.
 
 const anchor = require("@coral-xyz/anchor");
 
 module.exports = async function (provider) {
-  // Configure client to use the provider.
   anchor.setProvider(provider);
 
-  // Add your deploy script here.
+  const program = anchor.workspace.Gucc;
+  console.log("GUCC program ID:", program.programId.toBase58());
+  console.log("Migration complete — no global state to initialize.");
+  console.log("Use `initialize_event` to create individual prediction events.");
 };

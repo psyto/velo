@@ -49,8 +49,14 @@ pub mod gucc {
 
 
         // Mint internal tokens (accounting)
-        position.yes_amount = position.yes_amount.checked_add(amount).unwrap();
-        position.no_amount = position.no_amount.checked_add(amount).unwrap();
+        position.yes_amount = position
+            .yes_amount
+            .checked_add(amount)
+            .ok_or(error!(GuccError::ArithmeticOverflow))?;
+        position.no_amount = position
+            .no_amount
+            .checked_add(amount)
+            .ok_or(error!(GuccError::ArithmeticOverflow))?;
 
         Ok(())
     }
@@ -109,6 +115,8 @@ pub enum GuccError {
     AlreadyResolved,
     #[msg("Event is not resolved yet")]
     NotResolved,
+    #[msg("Arithmetic overflow")]
+    ArithmeticOverflow,
 }
 
 #[derive(Accounts)]

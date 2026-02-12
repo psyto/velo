@@ -9,7 +9,10 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 export const Providers: FC<{ children: ReactNode }> = ({ children }) => {
     // Default to localhost for development
-    const endpoint = useMemo(() => "http://127.0.0.1:8899", []);
+    const endpoint = useMemo(
+        () => process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "http://127.0.0.1:8899",
+        [],
+    );
 
     const wallets = useMemo(
         () => [

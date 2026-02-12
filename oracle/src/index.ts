@@ -10,7 +10,10 @@ const IDL = require("./gucc_idl.json");
 
 async function main() {
     // Connect to local validator
-    const connection = new Connection("http://127.0.0.1:8899", "confirmed");
+    const connection = new Connection(
+        process.env.SOLANA_RPC_URL ?? "http://127.0.0.1:8899",
+        "confirmed",
+    );
 
     // Load Wallet (Default Solana CLI wallet)
     const home = os.homedir();
