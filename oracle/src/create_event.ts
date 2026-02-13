@@ -2,6 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { createMint, getOrCreateAssociatedTokenAccount, mintTo, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import type { Gucc } from "../../program/target/types/gucc";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -26,7 +27,7 @@ async function main() {
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     anchor.setProvider(provider);
 
-    const program = new Program(IDL, provider);
+    const program = new Program(IDL as unknown as Gucc, provider);
 
     console.log("Setting up event...");
 
@@ -79,7 +80,6 @@ async function main() {
             wallet.publicKey // Oracle is us
         )
         .accounts({
-            // @ts-ignore
             congestionEvent: eventPda,
             authority: wallet.publicKey,
             usdcMint: usdcMint,

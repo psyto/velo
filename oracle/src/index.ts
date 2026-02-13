@@ -1,6 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import { Program, Idl } from "@coral-xyz/anchor";
 import { Connection, Keypair } from "@solana/web3.js";
+import type { Gucc } from "../../program/target/types/gucc";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -32,14 +33,13 @@ async function main() {
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     anchor.setProvider(provider);
 
-    const program = new Program(IDL, provider);
+    const program = new Program(IDL as unknown as Gucc, provider);
 
     console.log(`Oracle Service started. Oracle Public Key: ${wallet.publicKey.toBase58()}`);
     console.log("Watching for events...");
 
     const checkAndResolve = async () => {
         try {
-            // @ts-ignore
             const events = await program.account.congestionEvent.all();
 
             const now = Math.floor(Date.now() / 1000);
@@ -63,7 +63,6 @@ async function main() {
                         console.log(`Fetched Data: Speed=${mockSpeed}km/h (Threshold: ${threshold}). Outcome=${outcome}`);
 
                         try {
-                            // @ts-ignore
                             await program.methods.resolveEvent(outcome)
                                 .accounts({
                                     congestionEvent: publicKey,

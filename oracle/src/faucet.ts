@@ -2,6 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
+import type { Gucc } from "../../program/target/types/gucc";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -31,10 +32,9 @@ async function main() {
     // Load IDL
     const IDL = require("./gucc_idl.json");
     const provider = new anchor.AnchorProvider(connection, new anchor.Wallet(adminKeypair), {});
-    const program = new Program(IDL, provider);
+    const program = new Program(IDL as unknown as Gucc, provider);
 
     // Fetch all events to find the mint (assuming single mint for simplicity or just take the first one)
-    // @ts-ignore
     const events = await program.account.congestionEvent.all();
     if (events.length === 0) {
         console.error("No events found. Run create_event.ts first.");
